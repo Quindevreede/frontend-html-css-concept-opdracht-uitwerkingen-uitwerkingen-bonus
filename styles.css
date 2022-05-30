@@ -1,0 +1,620 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather&family=Roboto:wght@300;400;700&display=swap');
+
+/*////////////////////////
+    Table of Contents
+    1. Global Styles
+    2. Typography
+    3. Layout
+        3.1 Reusables
+        3.2 Other
+    4. Areas
+        4.1 Header
+        4.2 Introduction
+        4.3 Work
+        4.4 Services
+        4.5 Contact
+        4.6 Footer
+    5. Media Queries
+////////////////////////*/
+
+/* ------------------------------- 1. Global Styles -------------------------------- */
+
+/* Hier zijn alle kleuren voor de site al bepaald, dit is heel overzichtelijk. Vooral --primary en --secondary zal
+   je vaak gebruiken (bijv     color: var(--primary);       )
+ */
+:root {
+    --primary: #5722CD;
+    --primary-dark: #4B49E8;
+    --secondary: #ED4385;
+    --text: #7A7A7A;
+    --text-dark: #0c0c0c;
+    --text-faded: #f2f0ff;
+    --grey: #F3F6F9;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    /*Dit is belangrijk zodat de breedtes en hoogtes van elementen worden berekend INCLUSIEF padding en borders */
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+}
+
+/* ------------------------------- 2. Typography ----------------------------------- */
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: Merriweather, 'Times New Roman', serif;
+}
+
+h1, h2 {
+    font-size: 46px;
+    padding: 16px 0;
+}
+
+h3 {
+    font-size: 36px;
+}
+
+h4 {
+    font-size: 32px;
+    padding: 12px 0;
+    margin: 24px 0;
+}
+
+/* Hier is de SQUIGGLE-Line in de CSS opgelost, dus de squiggle-line komt bij
+   h4 nu altijd onder de text te staan met deze afstand. */
+h4::after {
+    display: block;
+    content: '';
+    margin: 24px 0 0;
+    width: 57px;
+    height: 6px;
+    background-image: url(./assets/squiggle_line.svg);
+}
+
+h5 {
+    font-size: 32px;
+    padding: 12px 0;
+}
+
+h6 {
+    font-size: 32px;
+    line-height: 1.5;
+    padding: 12px 0;
+}
+
+p {
+    margin: 12px 0;
+}
+
+/* ------------------------------- 3. Layout --------------------------------------- */
+
+/* --------------- 3.1 Reusables ----------------------- */
+
+/* De buitenste container is altijd de volledige schermbreedte. Het is een flexbox container die zijn inhoud altijd netjes horizontaal centreert */
+.outer-content-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+/* De binnenste container is maximaal 1400px breed, zodat het er ook goed uitziet op brede schermen.
+   Hij mag krimpen als het scherm minder breed wordt, maar niet groeien als er meer ruimte is.*/
+.inner-content-container {
+    flex-basis: 1400px;
+    flex-shrink: 1;
+    flex-grow: 0;
+    /*We voegen margin toe aan de linker- en rechterkant, zodat de content nooit helemaal tegen de rand gedrukt kan worden*/
+    margin: 0 20px;
+    /*We zorgen er ook voor dat deze flex-item op haar beurt ook weer een flexbox container is, waarin alle children onder elkaar komen te staan*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+}
+
+/* Deze text-restrictor is ervoor om te zorgen dat de teksten van verschillende vlakken op dezelfde breedte worden afgesneden.
+   We gebruiken hier geen flex-basis property, omdat dit element soms in een parent met column-richting en soms in een parent met row-richting kan staan.
+   In een column gaat flex-basis over de hoogte, niet de breedte. Dus om dan alsnog de breedte te veranderen, hebben we max-width (nooit groter dan dit) property nodig */
+.default-text-restrictor {
+    max-width: 850px;
+    text-align: center;
+}
+
+/* Default-area-padding zorgt ervoor dat er ruimte aan de boven- en onderkant van de text content komt te staan, als we dit
+   weg zouden laten staat de text op de rand van de area van de site Je kunt dit ook oplossen in de area maar dit is netter. */
+.default-area-padding {
+    padding: 200px 0 100px 0;
+}
+
+/* Dit is de driehoek die er optisch voor zorgt dat de delen van de pagina schuin afgesneden worden
+   .skewer--bottom is voor als de bodem schuin afgesneden moet worden */
+.skewer--bottom {
+    border-bottom: 50px solid white;
+    border-right: 100vw solid transparent;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* Dit is de driehoek die er optisch voor zorgt dat de delen van de pagina schuin afgesneden worden
+   .skewer--top is voor als de bovenkant schuin afgesneden moet worden */
+.skewer--top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-top: 50px solid white;
+    border-left: 100vw solid transparent;
+    z-index: 1;
+}
+
+/* --------------- 3.2 Other --------------------------- */
+
+a,
+a:visited,
+a:link {
+    text-decoration: none;
+    color: var(--primary);
+}
+
+button {
+    font-size: 14px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: white;
+    background-color: var(--secondary);
+    border: none;
+    border-radius: 50px;
+    box-shadow: 0 5px 8px 4px rgba(0, 0, 0, .2);
+    padding: 25px 40px;
+    margin: 28px 0;
+}
+
+/* Hierdoor veranderd je cursor in een wijzend handje als je HOVER over BUTTON */
+button:hover {
+    cursor: pointer;
+}
+
+/* ------------------------------- 4. Areas ---------------------------------------- */
+
+/* --------------- 4.1 Header ------------------------- */
+
+#header {
+    background: var(--primary-dark);
+    /*Mocht een verouderde browser geen gradients ondersteunen, dan valt de browser terug op de "effen" achtergrondkleur hierboven*/
+    background: linear-gradient(129deg, var(--primary-dark) 0%, var(--primary-dark) 26%, var(--primary)  100%);
+    color: white;
+    padding: 30px 0;
+    position: relative;
+}
+
+/* Dit is de Squiggle Line op de HEADER */
+#header::before {
+    content: '';
+    display: block;
+    width: 78px;
+    height: 100px;
+    position: absolute;
+    bottom: 20px;
+    left: calc(50% - 39px);
+    background-image: url(./assets/squiggle_line_stripe.svg);
+}
+
+/* Dit zorgt dat er een NOISE-Filet over de achtergrond van de HEADER komt */
+#header::after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+    background-image: url(assets/noise-texture.png);
+    background-position: top center;
+    background-size: auto;
+}
+
+.header-content__navigation {
+    display: flex;
+    flex-direction: row;
+    /*De <ul> die in de <nav> zit, wordt rechts (einde van de rij) uitgelijnd */
+    justify-content: flex-end;
+    /*De <nav> moet de beschikbare breedte van de pagina aannemen, anders valt er niks uit te lijnen aan de rechterkant */
+    width: 100%;
+}
+
+.header-content__navigation ul {
+    /*Om ervoor te zorgen dat de menu-items op normale afstand van elkaar staan, zorgen we dat de parent: <ul> minimaal 400px breed is*/
+    flex-basis: 400px;
+    flex-shrink: 1;
+    flex-grow: 0;
+    list-style-type: none;
+    /*Dit flex-item is op haar beurt ook weer een flex-container, die de <li> die erin zitten netjes evenredig verdeelt*/
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.header-content__navigation a {
+    color: white;
+}
+
+.header-content__hero {
+    padding: 100px 0;
+    margin-bottom: 88px;
+    font-size: 28px;
+}
+
+.header__squiggle {
+    display: block;
+    width: 78px;
+    height: 100px;
+    margin: 60px 0 0 0;
+    position: absolute;
+    bottom: 0;
+    /*Hiermee zeggen we: plaats 'm horizontaal gezien op 50% van de breedte,
+    MAAR wel min de helft van de breedte van de afbeelding zelf (width: 78px) */
+    left: calc(50% - 39px);
+    background-image: url(./assets/squiggle_line_stripe.svg);
+}
+
+/* --------------- 4.2 Introduction ------------------- */
+
+#intro {
+    background-color: white;
+    color: var(--primary);
+    position: relative;
+}
+
+/*Dit zijn de zwevende letters achter de content*/
+#intro::before {
+    display: block;
+    content: 'BACK';
+    color: var(--text-faded);
+    font-size: 550px;
+    opacity: 6;
+    font-weight: 600;
+    left: 0;
+    top: 0;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    letter-spacing: -18px;
+}
+
+.intro__link {
+    color: var(--text-dark);
+    font-weight: 500;
+    margin-top: 100px;
+}
+
+/* --------------- 4.3 Work --------------------------- */
+
+#work {
+    background-color: var(--grey);
+    position: relative;
+    padding: 100px 0 0 0;
+}
+
+/*Dit zijn de zwevende letters achter de content*/
+#work::before {
+    display: block;
+    content: 'work';
+    color: white;
+    font-size: 550px;
+    font-weight: 600;
+    left: 0;
+    top: 0;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    letter-spacing: -18px;
+}
+
+.work-article {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0 100px 0;
+}
+
+/*Draai de volgorde van de afbeelding en tekst om bij de 1e, 3e, etc. Je had ook nth-of-type(2) kunnen doen */
+.work-article:nth-of-type(odd) {
+    flex-direction: row-reverse;
+}
+
+.work-article__image-wrapper {
+    /*De afbeelding-wrapper moet in de basis 800px breed zijn...*/
+    flex-basis: 800px;
+    /*Als er meer ruimte is, mag hij NIET groter worden*/
+    flex-grow: 0;
+    /*Als er minder ruimte is, krimpt hij 1 fractie (dus alles) van de ingeleverde ruimte*/
+    flex-shrink: 1;
+}
+
+.work-article__image-wrapper img {
+    /*Om afbeeldingen goed mee te laten schalen met de wrapper, zet je de afbeelding zelf altijd op 100% breedte.
+    Zo past de afbeelding zich telkens aan, aan zijn omgeving*/
+    width: 100%;
+    box-shadow: 0 32px 28px -10px rgba(0, 0, 0, 0.22);
+}
+
+.work-article__info-container {
+    /*De content moet in de basis 480 breed zijn*/
+    flex-basis: 480px;
+    /*Als er meer ruimte is, mag hij NIET groter worden*/
+    flex-grow: 0;
+    /*Als er minder ruimte is, mag hij NIET kleiner worden*/
+    flex-shrink: 0;
+    padding: 0 50px 50px 50px;
+}
+
+/*.work-article__title-squiggle {*/
+/*    margin-top: 24px;*/
+/*    width: 57px;*/
+/*    height: 6px;*/
+/*    background-image: url(./assets/squiggle_line.svg);*/
+/*}
+Deze CSS is uiteindelijk niet gebruikt */
+
+.work-article__info-container p {
+    font-weight: 400;
+    margin: 50px 0;
+}
+
+.work-article__project-link {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.work-article__project-link::after {
+    display: inline-block;
+    content: '';
+    /*In de basis is het streepje 15 breed, maar dit veranderd bij hover*/
+    width: 15px;
+    height: 1px;
+    background-color: var(--primary);
+    margin: 0 0 4px 12px;
+    /*Zorg dat de overgang van kort naar lang streepje vloeiend verloopt*/
+    transition: all 0.2s ease-in-out;
+}
+
+.work-article__project-link:hover::after {
+    width: 55px;
+}
+
+/* --------------- 4.4 Services------------------------ */
+
+#services {
+    background-color: white;
+    padding: 100px 0 0 0;
+    position: relative;
+}
+
+/*Dit zijn de zwevende letters achter de content*/
+#services::before {
+    display: block;
+    content: 'services';
+    color: var(--text-faded);
+    font-size: 300px;
+    opacity: 0.6;
+    font-weight: 600;
+    left: 0;
+    top: 50px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    letter-spacing: -5px;
+}
+
+#services > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+/* Hierboven zijn dus de volledige inhoud van de services op flex-box container gezet op ROW zodat deze door WRAP
+   netjes naast elkaar geplaatst worden.
+   De TILE in de container is ook weer een flex-box container en deze staat op COLUMN omdat de img--icon title
+   en de tekst onder elkaar komen te staan.
+ */
+.service-tile {
+    /*De tegel moet in de basis 480 breed zijn*/
+    flex-basis: 384px;
+    /*Als er meer ruimte is, mag hij NIET groter worden*/
+    flex-grow: 0;
+    /*Als er minder ruimte is, krimpt hij 1 fractie (dus alle tegels evenveel) van de ingeleverde ruimte*/
+    flex-shrink: 1;
+    /*Deze tegel is op haar beurt weer een flexbox-container */
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    background-color: white;
+    border: 1px solid var(--primary);
+    box-shadow: 0 11px 16px 0 rgba(0, 0, 0, 0.1);
+    color: var(--text);
+    font-size: 16px;
+}
+
+.service-tile__title {
+    color: var(--primary);
+    font-size: 24px;
+}
+
+.service-tile__icon {
+    width: 80px;
+}
+
+/* --------------- 4.5 Contact ------------------------ */
+
+#contact {
+    background: var(--primary-dark);
+    /*Mocht een verouderde browser geen gradients ondersteunen, dan valt de browser terug op de "effen" achtergrondkleur hierboven*/
+    background: linear-gradient(129deg, var(--primary-dark) 0%, var(--primary-dark) 26%, var(--primary)  100%);
+    color: white;
+    position: relative;
+}
+
+#contact::after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+    background-image: url(assets/noise-texture.png);
+    background-position: top center;
+    background-size: auto;
+}
+
+.contact-content__form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    width: 100%;
+}
+
+.contact-content__form input,
+.contact-content__form textarea {
+    background-color: #ffffff;
+    border: 1px solid var(--text);
+    border-radius: 4px;
+    font-family: 'Roboto', sans-serif;
+    padding: 20px;
+    display: block;
+    font-size: 16px;
+    color: var(--text);
+    width: 100%;
+}
+
+.contact-content__form input::placeholder,
+.contact-content__form textarea::placeholder {
+    color: var(--text);
+}
+
+.contact-content__form label {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 20px 0;
+}
+
+.contact-content__form button {
+    width: 200px;
+    align-self: center;
+}
+
+/* --------------- 4.6 Footer ------------------------- */
+
+#footer {
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 14px;
+}
+
+/* ------------------------------- 5. Media Queries -------------------------------- */
+
+
+/*Omdat hier maar zo weinig media-queries nodig zijn is er gebruik gemaakt van een max-width query.*/
+/*Normaliter maak je altijd gebruik van min-width queries, waarbij de versie voor mobiel buiten de query staat, */
+/*en de versie voor desktop juist BUITEN de query*/
+@media screen and (max-width: 576px) {
+    h1, h2 {
+        font-size: 36px;
+        padding: 16px 0;
+    }
+
+    h3 {
+        font-size: 26px;
+    }
+
+
+    h6 {
+        font-size: 22px;
+        line-height: 1.5;
+        padding: 12px 0;
+    }
+
+    .header-content__navigation {
+        justify-content: center;
+    }
+
+    .header-content__navigation a {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    #intro > div {
+        padding: 100px 0;
+    }
+
+    #intro::before {
+        font-size: 150px;
+        letter-spacing: -10px;
+        top: 40px;
+    }
+
+    .intro__link {
+        margin: 50px 0 0 0;
+    }
+
+    #work::before {
+        font-size: 150px;
+        top: 80px;
+        letter-spacing: -5px;
+    }
+
+    #work {
+        padding: 0;
+    }
+
+    .work-article:nth-of-type(odd),
+    .work-article {
+        flex-direction: column;
+        margin: 0;
+    }
+
+    .work-article__image-wrapper {
+        /*om de breedte, die nu geldt als lengte, te overschrijven*/
+        flex-basis: auto;
+    }
+
+    .work-article__info-container {
+        padding: 0 0 50px 0;
+        /*om de breedte, die nu geldt als lengte, te overschrijven*/
+        flex-basis: auto;
+    }
+
+    #services {
+        padding: 50px 0;
+    }
+
+    #services::before {
+        font-size: 100px;
+        top: 70px;
+    }
+
+    #services > div {
+        padding: 100px 0 50px 0;
+    }
+
+    #contact > div {
+        padding: 100px 0 0 0;
+    }
+}
