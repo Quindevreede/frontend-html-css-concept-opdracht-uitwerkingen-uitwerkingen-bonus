@@ -402,7 +402,7 @@ Deze CSS is uiteindelijk niet gebruikt */
     padding: 100px 0 0 0;
     position: relative;
 }
-
+/**/
 /*Dit zijn de zwevende letters achter de content*/
 #services::before {
     display: block;
